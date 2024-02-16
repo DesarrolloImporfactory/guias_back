@@ -215,12 +215,12 @@ class GenerarGuiaModel extends Query
                         <tr style="width: 50%;">
                             <td>
 
-                                <img src="https://marketplace.imporsuit.com/sysadmin/img/speed.jpg" width="150" alt="logo">
+                                <img src="https://marketplace.imporsuit.com/sysadmin/img/speed.jpg" width="100" alt="logo">
                             </td>
 
                         </tr>
                         <tr style="width: 25%;" class="text-right">
-                            <td class="bold" style="font-size: 1.5em;">
+                            <td class="bold" style="font-size: 1.25em;">
                                 ' . $guia["numeroGuia"] . '
                             </td>
                         </tr>
@@ -261,7 +261,7 @@ class GenerarGuiaModel extends Query
 
                 <div class="ticket-section">
                     <span> Peso: ' . $guia["peso"] . ' KG<br></span>
-                    <span class="bold">Contenido: </span><br>  <span style="font-size: 1.05rem;">' . $guia["contiene"] . '</span><br>
+                    <span class="bold">Contenido: </span><br>  <span style="font-size: 0.75rem; max-width: 60px;">' . $guia["contiene"] . '</span><br>
                     <span>Valor asegurado: $0.00</span>
                     <br>
                     <br>
