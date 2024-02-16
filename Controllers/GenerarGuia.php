@@ -42,6 +42,6 @@ class GenerarGuia extends Controller
     public function revis()
     {
         $data = json_decode(file_get_contents('php://input'), true);
-        $this->model->cache($data);
+        $this->model->revisar($data);
     }
 }

@@ -32,7 +32,7 @@ class Query extends Conexion
             if ($e->errorInfo[1] == 1062) {
                 $result = "d";
             } else {
-                $result = $e->errorInfo[1];
+                $result = $e->getMessage();
             }
         }
         return $result;

@@ -40,6 +40,16 @@ class GenerarGuiaModel extends Query
         $tipocobro = $guia["tipocobro"];
         $comentario = $guia["comentario"];
         $fechaPedido = $guia["fechaPedido"];
+        date_default_timezone_set("America/Guayaquil");
+        // Convertir la fecha a formato Y-m-d para mantener la fecha
+        $fechaPedidoFormatted = date("Y-m-d", strtotime($fechaPedido));
+        // Obtener la hora actual en formato H:i:s
+        $currentTime = date("H:i:s");
+        // Combinar la fecha con la hora actual
+        $fechaPedidoWithCurrentTime = $fechaPedidoFormatted . ' ' . $currentTime;
+
+        $fechaPedido = $fechaPedidoWithCurrentTime;
+        $guia["fechaPedido"] = $fechaPedido;
         $extras = $guia["extras"];
 
         $sql = "INSERT INTO guias (origen_identificacion, origen_ciudad, origen_nombre, origen_direccion, origen_referencia, origen_numeroCasa, origen_telefono, origen_celular, destino_identificacion, destino_ciudad, destino_nombre, destino_direccion, destino_referencia, destino_numeroCasa, destino_telefono, destino_celular, numeroGuia, tipoServicio, noPiezas, peso, valorDeclarado, contiene, tamanio, cod, costoflete, costoproducto, tipocobro, comentario, fechaPedido, extras, estado) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -47,10 +57,11 @@ class GenerarGuiaModel extends Query
         $result = $this->insert($sql, $data);
         if ($result == 1) {
             echo json_encode(array("status" => "success", "message" => "Guia generada correctamente"));
+            $this->generar_guia($guia);
         } else if ($result == "d") {
             echo json_encode(array("status" => "error", "message" => "Guia ya existe"));
         } else {
-            echo json_encode(array("status" => "error", "message" => "Error al generar guia"));
+            echo json_encode(array("status" => "error", "message" => $result));
         }
     }
 
@@ -80,6 +91,27 @@ class GenerarGuiaModel extends Query
 
     public function generar_guia($guia)
     {
+        //verifica si la hora es AM o PM
+        $fechaPedido = $guia["fechaPedido"];
+
+        $am_or_pm = date('A', strtotime($fechaPedido));
+        $ciudad = $guia["destino"]["ciudadD"];
+        $ciudadNombre = "";
+        switch ($ciudad) {
+            case 1:
+                $ciudadNombre = "Quito";
+                break;
+            case 2:
+                $ciudadNombre = "Valle de los Chillos";
+                break;
+            case 3:
+                $ciudadNombre = "Valle de Cumbaya";
+                break;
+            case 4:
+                $ciudadNombre = "Valle de Tumbaco";
+                break;
+        }
+
         $html = '
         <!DOCTYPE html>
         <html lang="es">
@@ -95,7 +127,7 @@ class GenerarGuiaModel extends Query
                 }
 
                 .ticket-container {
-                    width: 400px;
+                    width: 600px;
                     padding: 10px;
                     border: 1px solid #000;
                     margin: auto;
@@ -173,44 +205,53 @@ class GenerarGuiaModel extends Query
 
                 <div class="ticket-section">
                     <br><span class="bold">DESTINO: ' . $guia["destino"]["nombreD"] . '</span> <br> 
-                    <span> ' . $guia["destino"]["direccion"] . $guia["destino"]["referencia"] . '</span><br>
-                    <span class="bold">TEL: ' . $guia["destino"]["telefono"] . '</span>
+                    <span> ' . $guia["destino"]["direccion"] . $guia["destino"]["numeroCasa"] . $guia["destino"]["referencia"] . '</span><br>
+                    <span class="bold">TEL: ' . $guia["destino"]["celular"] . '</span>
                     <br><br>
                 </div>
 
                 <div class="ticket-section">
                     <span>' . $guia["comentario"] . '  </span> <br>
-                    <span style="font-size: 2em;" class="bold">' . $guia["ciudadD"] . ' 
-                    <span class="bold"> </span>
+                    <span style="font-size: 2em;" class="bold">' . $ciudadNombre . ' </span> <br>
+                    <span class="bold"> QUITO </span>
                     <br>
                     <br>
                 </div>
 
                 <div class="ticket-section">
                     <br>
-                    <span>Peso: 2 KG <br></span>
-                    <span class="bold">Contenido: </span> <span style="font-size: 2rem;">SADx1</span><br>
+                    <span> ' . $guia["peso"] . ' KG<br></span>
+                    <span class="bold">Contenido: </span><br>  <span style="font-size: 1.25rem;">' . $guia["contiene"] . '</span><br>
                     <span>Valor asegurado: $0.00</span>
                     <br>
                     <br>
                 </div>
 
                 <div class="ticket-section text-center">
-                    <br> <span class="bold">VALOR A COBRAR $17.40</span><br>
+                    <br> <span class="bold">VALOR A COBRAR $' . $guia["costoproducto"] . '</span><br>
                     <br>
                 </div>
 
                 <div class="ticket-section text-right">
-                    <span>CARGA - 2/1/2024 4:19:43 PM</span>
+                    <span>CARGA - ' . $guia['fechaPedido'] . ' ' . $am_or_pm . '</span>
                 </div>
             </div>
         </body>
 
         </html>
         ';
+
+        $sql = "INSERT INTO visor_guia (numero_guia, html) VALUES (?,?)";
+        $data = array($guia["numeroGuia"], $html);
+        $result = $this->insert($sql, $data);
+        if ($result == 1) {
+            echo json_encode(array("status" => "success", "message" => "Guia generada correctamente"));
+        } else {
+            echo json_encode(array("status" => "error", "message" => "Error al generar guia"));
+        }
     }
 
-    public function cache($data)
+    public function revisar($data)
     {
         $json_data = json_encode($data);
         $sql = "INSERT INTO cache (cache) VALUES (?)";
