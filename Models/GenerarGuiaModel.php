@@ -1,5 +1,7 @@
 <?php
 
+use Dompdf\Dompdf;
+
 class GenerarGuiaModel extends Query
 {
     public function __construct()
@@ -260,6 +262,30 @@ class GenerarGuiaModel extends Query
             echo json_encode(array("status" => "success", "message" => "Cache generada correctamente"));
         } else {
             echo json_encode(array("status" => "error", "message" => "Error al generar cache"));
+        }
+    }
+
+    public function descargar($guia)
+    {
+        $sql = "SELECT * FROM visor_guia WHERE numero_guia = ?";
+        $data = array($guia);
+        $result = $this->select($sql, $data);
+        if ($result) {
+            $html = $result[0]["html"];
+            // instantiate and use the dompdf class
+            $dompdf = new Dompdf();
+            $dompdf->loadHtml($html);
+
+            // (Optional) Setup the paper size and orientation
+            $dompdf->setPaper('A4', 'portrait');
+
+            // Render the HTML as PDF
+            $dompdf->render();
+
+            // Output the generated PDF to Browser
+            $dompdf->stream();
+        } else {
+            echo json_encode(array("status" => "error", "message" => "Error al obtener guia"));
         }
     }
 }

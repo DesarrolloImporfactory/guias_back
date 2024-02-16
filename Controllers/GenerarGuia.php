@@ -25,6 +25,11 @@ class GenerarGuia extends Controller
         }
     }
 
+    public function descargar($guia)
+    {
+        $this->model->descargar($guia);
+    }
+
     public function visor($id)
     {
         if ($this->detectar_token()) {

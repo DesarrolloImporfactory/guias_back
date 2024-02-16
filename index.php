@@ -1,4 +1,5 @@
 <?php
+require 'vendor/autoload.php';
 require_once 'Config/Config.php';
 $rute = !empty($_GET['url']) ? $_GET['url'] : 'Home/index';
 $array = explode('/', $rute);
