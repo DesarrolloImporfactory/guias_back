@@ -136,7 +136,7 @@ class GenerarGuiaModel extends Query
             .ticket-container {
                 width: 275.464pt;
                 /* 100mm in points */
-                height: 263.464pt;
+                height: 253.464pt;
                 /* 100mm in points */
                 margin: 0;
                 padding: 5pt;
@@ -269,9 +269,6 @@ class GenerarGuiaModel extends Query
                     <br> <span class="bold">VALOR A COBRAR $' . $guia["costoproducto"] . '</span><br>        
                 </div>
 
-                <div class="ticket-section text-right">
-                    <span>CARGA - ' . $guia['fechaPedido'] . ' ' . $am_or_pm . '</span>
-                </div>
             </div>
         </body>
 
