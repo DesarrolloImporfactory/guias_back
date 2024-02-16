@@ -39,7 +39,7 @@ class GenerarGuia extends Controller
         $this->views->render($this, "ver", $id);
     }
 
-    public function cache()
+    public function revis()
     {
         $data = json_decode(file_get_contents('php://input'), true);
         $this->model->cache($data);
