@@ -136,7 +136,7 @@ class GenerarGuiaModel extends Query
             .ticket-container {
                 width: 275.464pt;
                 /* 100mm in points */
-                height: 275.464pt;
+                height: 263.464pt;
                 /* 100mm in points */
                 margin: 0;
                 padding: 5pt;
@@ -156,7 +156,7 @@ class GenerarGuiaModel extends Query
             .ticket-header,
             .ticket-section {
                 text-align: center;
-                margin: 2pt 0;
+                margin: 0pt 0;
                 /* Reduce los márgenes */
             }
     
