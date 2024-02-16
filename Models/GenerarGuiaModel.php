@@ -134,9 +134,9 @@ class GenerarGuiaModel extends Query
     
             body,
             .ticket-container {
-                width: 275.464pt;
+                width: 255.464pt;
                 /* 100mm in points */
-                height: 253.464pt;
+                height: 263.464pt;
                 /* 100mm in points */
                 margin: 0;
                 padding: 5pt;
@@ -149,9 +149,7 @@ class GenerarGuiaModel extends Query
                 /* Ajusta el tamaño de la fuente para que el texto encaje */
             }
     
-            .ticket-container {
-                border: 1px solid #000;
-            }
+           
     
             .ticket-header,
             .ticket-section {
