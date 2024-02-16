@@ -1,6 +1,7 @@
 <?php
 
 use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class GenerarGuiaModel extends Query
 {
@@ -93,6 +94,9 @@ class GenerarGuiaModel extends Query
 
     public function generar_guia($guia)
     {
+
+        $imagen = "https://marketplace.imporsuit.com/sysadmin/img/speed.jpg";
+        $imagen_url = file_get_contents($imagen);
         //verifica si la hora es AM o PM
         $fechaPedido = $guia["fechaPedido"];
 
@@ -122,6 +126,10 @@ class GenerarGuiaModel extends Query
             <meta charset="UTF-8">
             <title>Ticket de Envío</title>
             <style>
+            @page {
+                margin: 0px;
+            }
+    
                 body {
                     font-family: Arial, sans-serif;
                     margin: 0;
@@ -267,17 +275,26 @@ class GenerarGuiaModel extends Query
 
     public function descargar($guia)
     {
-        $sql = "SELECT * FROM visor_guia WHERE numero_guia = ?";
-        $data = array($guia);
-        $result = $this->select($sql, $data);
+        $sql = "SELECT * FROM visor_guia WHERE numero_guia = '" . $guia . "'";
+
+        $result = $this->select($sql);
         if ($result) {
             $html = $result[0]["html"];
+            $options    = new Options();
+            $options->set(array('isRemoteEnabled' => true));
+            // Set to enable remote images to be used in PDF
+            define("DOMPDF_ENABLE_REMOTE", true);
+
             // instantiate and use the dompdf class
-            $dompdf = new Dompdf();
+            $dompdf = new Dompdf(array('enable_remote' => true));
+            $dompdf->set_option('isHtml5ParserEnabled', true);
+            $dompdf->set_option('isPhpEnabled', true);
+            $dompdf->set_option('enable_remote', TRUE);
             $dompdf->loadHtml($html);
 
             // (Optional) Setup the paper size and orientation
-            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->setPaper(array(0, 0, 500, 500), 'portrait'); // Cambia las dimensiones según necesites
+
 
             // Render the HTML as PDF
             $dompdf->render();
