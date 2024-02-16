@@ -18,25 +18,30 @@ class GenerarGuia extends Controller
     }
     public function anular($id)
     {
-        if($this->detectar_token())
-        {
+        if ($this->detectar_token()) {
             $this->model->anular($id);
-        }else{
+        } else {
             echo "No tiene permisos";
         }
     }
 
     public function visor($id)
     {
-        if($this->detectar_token())
-        {
+        if ($this->detectar_token()) {
             $this->model->visor($id);
-        }else{
+        } else {
             echo "No tiene permisos";
         }
     }
 
-    public function ver($id){
+    public function ver($id)
+    {
         $this->views->render($this, "ver", $id);
+    }
+
+    public function cache()
+    {
+        $data = json_decode(file_get_contents('php://input'), true);
+        $this->model->cache($data);
     }
 }
