@@ -126,52 +126,83 @@ class GenerarGuiaModel extends Query
             <meta charset="UTF-8">
             <title>Ticket de Envío</title>
             <style>
+        
             @page {
-                margin: 0px;
+                size: 100mm 100mm;
+                margin: 0;
             }
     
-                body {
-                    font-family: Arial, sans-serif;
-                    margin: 0;
-                    padding: 0;
-                }
-
-                .ticket-container {
-                    width: 600px;
-                    padding: 10px;
-                    border: 1px solid #000;
-                    margin: auto;
-                }
-
-                .ticket-header {
-                    text-align: center;
-                }
-
-                .ticket-info {
-                    margin-bottom: 10px;
-                }
-
-                .ticket-info span {
-                    display: block;
-                }
-
-                .ticket-section {
-                    border-top: 1px solid #000;
-                    padding-top: 5px;
-                }
-
-                .bold {
-                    font-weight: bold;
-                }
-
-                .text-right {
-                    text-align: right;
-                }
-
-                .text-center {
-                    text-align: center;
-                }
-            </style>
+            body,
+            .ticket-container {
+                width: 283.464pt;
+                /* 100mm in points */
+                height: 283.464pt;
+                /* 100mm in points */
+                margin: 0;
+                padding: 5pt;
+                /* Ajusta el padding para ahorrar espacio */
+                overflow: hidden;
+                font-family: Arial, sans-serif;
+                font-size: 8pt;
+    
+    
+                /* Ajusta el tamaño de la fuente para que el texto encaje */
+            }
+    
+            .ticket-container {
+                border: 1px solid #000;
+            }
+    
+            .ticket-header,
+            .ticket-section {
+                text-align: center;
+                margin: 2pt 0;
+                /* Reduce los márgenes */
+            }
+    
+            .ticket-info,
+            .ticket-section {
+                clear: both;
+                padding-top: 2pt;
+                /* Reduce el padding */
+            }
+    
+            .ticket-section {
+                border-top: 1px solid #000;
+            }
+    
+            .bold {
+                font-weight: bold;
+            }
+    
+            .text-right {
+                text-align: right;
+            }
+    
+            .text-center {
+                text-align: center;
+            }
+    
+            img {
+                max-width: 80%;
+                /* Reduce el tamaño de las imágenes */
+                height: auto;
+                display: block;
+                margin: auto;
+                /* Centra la imagen */
+            }
+    
+            table {
+                width: 100%;
+            }
+    
+            /* Ajustes adicionales para el texto y los elementos */
+            span,
+            td {
+                line-height: 1.1;
+                /* Ajusta el interlineado */
+            }
+        </style>
         </head>
 
         <body>
@@ -184,7 +215,7 @@ class GenerarGuiaModel extends Query
                         <tr style="width: 50%;">
                             <td>
 
-                                <img src="https://marketplace.imporsuit.com/sysadmin/img/speed.jpg" width="200" alt="logo">
+                                <img src="https://marketplace.imporsuit.com/sysadmin/img/speed.jpg" width="150" alt="logo">
                             </td>
 
                         </tr>
@@ -229,9 +260,8 @@ class GenerarGuiaModel extends Query
                 </div>
 
                 <div class="ticket-section">
-                    <br>
-                    <span> ' . $guia["peso"] . ' KG<br></span>
-                    <span class="bold">Contenido: </span><br>  <span style="font-size: 1.25rem;">' . $guia["contiene"] . '</span><br>
+                    <span> Peso: ' . $guia["peso"] . ' KG<br></span>
+                    <span class="bold">Contenido: </span><br>  <span style="font-size: 1.05rem;">' . $guia["contiene"] . '</span><br>
                     <span>Valor asegurado: $0.00</span>
                     <br>
                     <br>
@@ -293,7 +323,7 @@ class GenerarGuiaModel extends Query
             $dompdf->loadHtml($html);
 
             // (Optional) Setup the paper size and orientation
-            $dompdf->setPaper(array(0, 0, 500, 500), 'portrait'); // Cambia las dimensiones según necesites
+            $dompdf->setPaper(array(0, 0, 3.937 * 72, 3.937 * 72), 'portrait');
 
 
             // Render the HTML as PDF
