@@ -16,8 +16,27 @@ class GenerarGuia extends Controller
             echo "No tiene permisos";
         }
     }
-    public function eliminar($id)
+    public function anular($id)
     {
-        $this->model->eliminar($id);
+        if($this->detectar_token())
+        {
+            $this->model->anular($id);
+        }else{
+            echo "No tiene permisos";
+        }
+    }
+
+    public function visor($id)
+    {
+        if($this->detectar_token())
+        {
+            $this->model->visor($id);
+        }else{
+            echo "No tiene permisos";
+        }
+    }
+
+    public function ver($id){
+        $this->views->render($this, "ver", $id);
     }
 }

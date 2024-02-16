@@ -54,7 +54,7 @@ class GenerarGuiaModel extends Query
         }
     }
 
-    public function eliminar($id)
+    public function anular($id)
     {
         $sql = "UPDATE guias SET estado = 0 WHERE numero_guia = ?";
         $data = array($id);
@@ -64,5 +64,149 @@ class GenerarGuiaModel extends Query
         } else {
             echo json_encode(array("status" => "error", "message" => "Error al eliminar guia"));
         }
+    }
+
+    public function visor($id)
+    {
+        $sql = "SELECT * FROM guias WHERE numero_guia = ?";
+        $data = array($id);
+        $result = $this->select($sql, $data);
+        if ($result) {
+            echo json_encode(array("status" => "success", "data" => $result));
+        } else {
+            echo json_encode(array("status" => "error", "message" => "Error al obtener guia"));
+        }
+    }
+
+    public function generar_guia($guia)
+    {
+        $html = '
+        <!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Ticket de Envío</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .ticket-container {
+            width: 400px;
+            padding: 10px;
+            border: 1px solid #000;
+            margin: auto;
+        }
+
+        .ticket-header {
+            text-align: center;
+        }
+
+        .ticket-info {
+            margin-bottom: 10px;
+        }
+
+        .ticket-info span {
+            display: block;
+        }
+
+        .ticket-section {
+            border-top: 1px solid #000;
+            padding-top: 5px;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="ticket-container">
+        <div class="ticket-header">
+            <table style="width: 100%;">
+                <tr style="width: 25%;">
+                    <td></td>
+                </tr>
+                <tr style="width: 50%;">
+                    <td>
+
+                        <img src="https://marketplace.imporsuit.com/sysadmin/img/speed.jpg" width="200" alt="logo">
+                    </td>
+
+                </tr>
+                <tr style="width: 25%;" class="text-right">
+                    <td class="bold" style="font-size: 1.5em;">
+                        ' . $guia["numeroGuia"] . '
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+        <div class="ticket-info">
+            <table style="width: 100%;">
+                <tr>
+                    <td style="width: 50%;">
+                        <span class=" bold">REMITENTE: IMPORSUIT</span>
+                        <span>QUITO - ECUADOR s2556 Av hernan Gmoiner y s1654</span>
+                    </td>
+                    <td style="width: 50%;" class="text-right">
+                        <span class="bold">QUITO </span>
+                        <span>TEL: ' . $guia["origen"]["telefono"] . '</span>
+                        <span>' . $guia["origen"]["celular"] . '</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="ticket-section">
+            <br><span class="bold">DESTINO: ' . $guia["destino"]["nombreD"] . '</span> <br> 
+            <span> ' . $guia["destino"]["direccion"] . $guia["destino"]["referencia"] . '</span><br>
+            <span class="bold">TEL: ' . $guia["destino"]["telefono"] . '</span>
+            <br><br>
+        </div>
+
+        <div class="ticket-section">
+            <span>' . $guia["comentario"] . '  </span> <br>
+            <span style="font-size: 2em;" class="bold">' . $guia["ciudadD"] . ' 
+            <span class="bold"> </span>
+            <br>
+            <br>
+        </div>
+
+        <div class="ticket-section">
+            <br>
+            <span>Peso: 2 KG <br></span>
+            <span class="bold">Contenido: </span> <span style="font-size: 2rem;">SADx1</span><br>
+            <span>Valor asegurado: $0.00</span>
+            <br>
+            <br>
+        </div>
+
+        <div class="ticket-section text-center">
+            <br> <span class="bold">VALOR A COBRAR $17.40</span><br>
+            <br>
+        </div>
+
+        <div class="ticket-section text-right">
+            <span>CARGA - 2/1/2024 4:19:43 PM</span>
+        </div>
+    </div>
+</body>
+
+</html>
+        ';
     }
 }
