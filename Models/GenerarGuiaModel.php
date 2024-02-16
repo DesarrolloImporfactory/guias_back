@@ -134,9 +134,9 @@ class GenerarGuiaModel extends Query
     
             body,
             .ticket-container {
-                width: 283.464pt;
+                width: 275.464pt;
                 /* 100mm in points */
-                height: 283.464pt;
+                height: 275.464pt;
                 /* 100mm in points */
                 margin: 0;
                 padding: 5pt;
@@ -236,8 +236,8 @@ class GenerarGuiaModel extends Query
                                 <span>QUITO - ECUADOR s2556 Av hernan Gmoiner y s1654</span>
                             </td>
                             <td style="width: 50%;" class="text-right">
-                                <span class="bold">QUITO </span>
-                                <span>TEL: ' . $guia["origen"]["telefono"] . '</span>
+                                <span class="bold">QUITO </span> <br>
+                                <span>TEL: ' . $guia["origen"]["telefono"] . '</span> <br>
                                 <span>' . $guia["origen"]["celular"] . '</span>
                             </td>
                         </tr>
@@ -245,31 +245,28 @@ class GenerarGuiaModel extends Query
                 </div>
 
                 <div class="ticket-section">
-                    <br><span class="bold">DESTINO: ' . $guia["destino"]["nombreD"] . '</span> <br> 
+                  <span class="bold">DESTINO: ' . $guia["destino"]["nombreD"] . '</span> <br> 
                     <span> ' . $guia["destino"]["direccion"] . $guia["destino"]["numeroCasa"] . $guia["destino"]["referencia"] . '</span><br>
                     <span class="bold">TEL: ' . $guia["destino"]["celular"] . '</span>
-                    <br><br>
+                  
                 </div>
 
                 <div class="ticket-section">
                     <span>' . $guia["comentario"] . '  </span> <br>
                     <span style="font-size: 2em;" class="bold">' . $ciudadNombre . ' </span> <br>
                     <span class="bold"> QUITO </span>
-                    <br>
-                    <br>
+                    
                 </div>
 
                 <div class="ticket-section">
                     <span> Peso: ' . $guia["peso"] . ' KG<br></span>
                     <span class="bold">Contenido: </span><br>  <span style="font-size: 0.75rem; max-width: 60px;">' . $guia["contiene"] . '</span><br>
                     <span>Valor asegurado: $0.00</span>
-                    <br>
-                    <br>
+                   
                 </div>
 
                 <div class="ticket-section text-center">
-                    <br> <span class="bold">VALOR A COBRAR $' . $guia["costoproducto"] . '</span><br>
-                    <br>
+                    <br> <span class="bold">VALOR A COBRAR $' . $guia["costoproducto"] . '</span><br>        
                 </div>
 
                 <div class="ticket-section text-right">
