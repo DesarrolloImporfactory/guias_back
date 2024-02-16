@@ -19,10 +19,22 @@ class Query extends Conexion
 
     public function insert($sql, $data)
     {
-        $this->sql = $sql;
-        $query = $this->connection->prepare($this->sql);
-        $query->execute($data);
-        $result = $query->rowCount();
+        try {
+            $this->sql = $sql;
+            $query = $this->connection->prepare($this->sql);
+            $query->execute($data);
+            if ($query->rowCount() > 0) {
+                $result = 1;
+            } else {
+                $result = 0;
+            }
+        } catch (PDOException $e) {
+            if ($e->errorInfo[1] == 1062) {
+                $result = "d";
+            } else {
+                $result = $e->errorInfo[1];
+            }
+        }
         return $result;
     }
 

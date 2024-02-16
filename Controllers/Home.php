@@ -6,7 +6,7 @@ class Home extends Controller
     {
         $this->views->render($this, "index");
     }
-    public function shopify(){
-        
+    public function shopify()
+    {
     }
- }
+}
