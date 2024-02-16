@@ -317,7 +317,7 @@ class GenerarGuiaModel extends Query
             $dompdf->loadHtml($html);
 
             // (Optional) Setup the paper size and orientation
-            $dompdf->setPaper(array(0, 0, 3.937 * 72, 3.937 * 72), 'portrait');
+            $dompdf->setPaper(array(0, 0, 4.937 * 72, 4.937 * 72), 'portrait');
 
 
             // Render the HTML as PDF
