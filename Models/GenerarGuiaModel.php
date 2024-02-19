@@ -373,13 +373,19 @@ class GenerarGuiaModel extends Query
 
         $tienda_venta_conexion = $this->obtener_conexion($tienda_venta);
         $tienda_proveedor_conexion = $this->obtener_conexion($tienda_proveedor);
+        $marketplace = $this->obtener_conexion("https://marketplace.imporsuit.com");
 
         $sql = "UPDATE guia_laar SET estado_guia = 4 WHERE guia_laar = '" . $guia_laar . "'";
         $result = mysqli_query($tienda_venta_conexion, $sql);
         if ($result) {
             $result2 = mysqli_query($tienda_proveedor_conexion, $sql);
             if ($result2) {
-                return json_encode(array("status" => "success", "message" => "Guia cancelada correctamente"));
+                $result3 = mysqli_query($marketplace, $sql);
+                if ($result3) {
+                    return json_encode(array("status" => "success", "message" => "Guia cancelada correctamente"));
+                } else {
+                    return json_encode(array("status" => "error", "message" => "Error al cancelar guiass"));
+                }
             } else {
                 return json_encode(array("status" => "error", "message" => "Error al cancelar guiass"));
             }
