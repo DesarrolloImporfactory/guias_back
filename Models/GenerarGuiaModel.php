@@ -70,19 +70,20 @@ class GenerarGuiaModel extends Query
 
     public function anular($id)
     {
-        $sql = "UPDATE guias SET estado = 0 WHERE numero_guia = ?";
+        $this->cancelar_guia($this->obtener_guias($id));
+        /* $sql = "UPDATE guias SET estado = 0 WHERE numeroGuia = ?";
         $data = array($id);
         $result = $this->update($sql, $data);
         if ($result == 1) {
-            echo json_encode(array("status" => "success", "message" => "Guia eliminada correctamente"));
         } else {
-            echo json_encode(array("status" => "error", "message" => "Error al eliminar guia"));
-        }
+            echo $result;
+            echo json_encode(array("status" => "error", "message" => "Error al eliminar guia de la base de datos"));
+        } */
     }
 
     public function visor($id)
     {
-        $sql = "SELECT * FROM guias WHERE numero_guia = ?";
+        $sql = "SELECT * FROM guias WHERE numeroGuia = ?";
         $data = array($id);
         $result = $this->select($sql, $data);
         if ($result) {
@@ -317,14 +318,76 @@ class GenerarGuiaModel extends Query
             // (Optional) Setup the paper size and orientation
             $dompdf->setPaper(array(0, 0, 4.937 * 72, 4.937 * 72), 'portrait');
 
-
             // Render the HTML as PDF
             $dompdf->render();
 
             // Output the generated PDF to Browser
-            $dompdf->stream();
+            $dompdf->stream($guia . ".pdf", array("Attachment" => 1));
         } else {
             echo json_encode(array("status" => "error", "message" => "Error al obtener guia"));
         }
+    }
+
+    public function obtener_conexion($tienda)
+    {
+        $archivo_tienda =  $tienda . '/sysadmin/vistas/db1.php';
+        $archivo_destino_tienda = "./Config/Destino.php";
+        $contenido_tienda = file_get_contents($archivo_tienda);
+        $get_data = json_decode($contenido_tienda, true);
+        if (file_put_contents($archivo_destino_tienda, $contenido_tienda) !== false) {
+            $host_d = $get_data['DB_HOST'];
+            $user_d = $get_data['DB_USER'];
+            $pass_d = $get_data['DB_PASS'];
+            $base_d = $get_data['DB_NAME'];
+            // Conexión a la base de datos de la tienda, establece la hora -5 GTM
+            date_default_timezone_set('America/Guayaquil');
+            $conexion = mysqli_connect($host_d, $user_d, $pass_d, $base_d);
+            if (!$conexion) {
+                die("Connection failed: " . mysqli_connect_error());
+            }
+            return $conexion;
+        } else {
+            echo "Error al copiar el archivo";
+        }
+    }
+
+    public function obtener_guias($guia)
+    {
+        $marketplace = $this->obtener_conexion("https://marketplace.imporsuit.com");
+        $sql = "SELECT * FROM `guia_laar` where guia_laar = '" . $guia . "'";
+        $result = mysqli_query($marketplace, $sql);
+        print_r($marketplace);
+        $row = mysqli_fetch_assoc($result);
+        print_r($row);
+        return json_encode($row);
+    }
+
+    public function cancelar_guia($row)
+    {
+        $row = json_decode($row, true);
+
+        //se recibe el row del query
+        $tienda_venta = $row['tienda_venta'];
+        $guia_laar = $row['guia_laar'];
+        $tienda_proveedor = $row['tienda_proveedor'];
+
+        $tienda_venta_conexion = $this->obtener_conexion($tienda_venta);
+        $tienda_proveedor_conexion = $this->obtener_conexion($tienda_proveedor);
+
+        $sql = "UPDATE guia_laar SET estado_guia = 4 WHERE guia_laar = '" . $guia_laar . "'";
+        $result = mysqli_query($tienda_venta_conexion, $sql);
+        if ($result) {
+            $result2 = mysqli_query($tienda_proveedor_conexion, $sql);
+            if ($result2) {
+                return json_encode(array("status" => "success", "message" => "Guia cancelada correctamente"));
+            } else {
+                return json_encode(array("status" => "error", "message" => "Error al cancelar guiass"));
+            }
+        } else {
+            return json_encode(array("status" => "error", "message" => "Error al cancelar guia"));
+        }
+
+        mysqli_close($tienda_venta_conexion);
+        mysqli_close($tienda_proveedor_conexion);
     }
 }
