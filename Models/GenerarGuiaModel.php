@@ -106,17 +106,40 @@ class GenerarGuiaModel extends Query
         $ciudadNombre = "";
         switch ($ciudad) {
             case 1:
+            case 599:
                 $ciudadNombre = "Quito";
                 break;
             case 2:
+            case 616:
                 $ciudadNombre = "Valle de los Chillos";
                 break;
             case 3:
+            case 562:
                 $ciudadNombre = "Valle de Cumbaya";
                 break;
             case 4:
+            case 613:
                 $ciudadNombre = "Valle de Tumbaco";
                 break;
+            case 5:
+            case 590:
+                $ciudadNombre = "PIFO";
+                break;
+            case 6:
+            case 608:
+                $ciudadNombre = "SANGOLQUI";
+                break;
+            case 7:
+            case 607:
+                $ciudadNombre = "SAN RAFAEL";
+                break;
+            case 8:
+            case 560:
+                $ciudadNombre = "CONOCOTO";
+                break;
+        }
+        if ($guia["cod"] == 0) {
+            $guia["costoproducto"] = "SIN RECAUDO";
         }
 
         $html = '
@@ -231,8 +254,8 @@ class GenerarGuiaModel extends Query
                     <table style="width: 100%;">
                         <tr>
                             <td style="width: 50%;">
-                                <span class=" bold">REMITENTE: IMPORSUIT</span>
-                                <span>QUITO - ECUADOR s2556 Av hernan Gmoiner y s1654</span>
+                                <span class=" bold">REMITENTE: ' . $guia["origen"]["nombreO"] . '</span>
+                                <span>' . $guia["origen"]["direccion"] . " " . $guia["origen"]["numeroCasa"] . " " . $guia["referencia"] . '</span>
                             </td>
                             <td style="width: 50%;" class="text-right">
                                 <span class="bold">QUITO </span> <br>
